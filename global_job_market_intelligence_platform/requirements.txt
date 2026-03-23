@@ -1,0 +1,11 @@
+
+streamlit
+pandas
+numpy
+requests
+scikit-learn
+joblib
+plotly
+sqlalchemy
+psycopg2-binary
+spacy
