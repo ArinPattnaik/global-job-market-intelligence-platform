@@ -1,7 +1,10 @@
 
-# Add your API keys here
-ADZUNA_APP_ID = "YOUR_ADZUNA_APP_ID"
-ADZUNA_APP_KEY = "YOUR_ADZUNA_APP_KEY"
+import os
+from dotenv import load_dotenv
 
-COUNTRIES = ["us","gb","in","ca","au"]
-QUERY = "data analyst"
+load_dotenv()
+
+ADZUNA_APP_ID = os.getenv("ADZUNA_APP_ID")
+ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
+COUNTRIES = os.getenv("COUNTRIES", "us,gb,in,ca,au").split(",")
+QUERY = os.getenv("QUERY", "data analyst")

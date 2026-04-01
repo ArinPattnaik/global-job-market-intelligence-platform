@@ -9,3 +9,5 @@ plotly
 sqlalchemy
 psycopg2-binary
 spacy
+python-dotenv
+pytest
