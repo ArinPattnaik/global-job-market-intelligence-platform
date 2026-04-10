@@ -163,20 +163,6 @@ The platform includes a **Universal Data Analyzer** that accepts any CSV or Exce
 
 ---
 
-## 🔄 Automated Releases & Versioning
-
-This project uses **GitHub Actions** for continuous delivery and automated releases. 
-
-Whenever a new version tag (e.g., `v1.0.0`, `v1.1.0`) is pushed to the repository, a GitHub Action is triggered to automatically generate the changelog and publish a new Release on the [Releases page](../../releases). 
-
-To trigger a new release:
-```bash
-git tag vX.Y.Z
-git push origin tags/vX.Y.Z
-```
-
----
-
 ## 📄 License
 
 This project is open source under the [MIT License](LICENSE).
