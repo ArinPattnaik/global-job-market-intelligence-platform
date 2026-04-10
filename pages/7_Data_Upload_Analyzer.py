@@ -13,6 +13,10 @@ from io import BytesIO
 
 st.set_page_config(page_title="Data Analyzer | GJMIP", page_icon="📤", layout="wide")
 
+with st.sidebar:
+    if st.button("⬅️ Back to Home", use_container_width=True):
+        st.switch_page("app.py")
+
 COLORS = ["#667EEA", "#764BA2", "#48BB78", "#ED8936", "#E53E3E",
           "#38B2AC", "#D69E2E", "#9F7AEA", "#FC8181", "#4FD1C5"]
 

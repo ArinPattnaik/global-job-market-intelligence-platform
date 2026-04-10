@@ -12,6 +12,10 @@ from pathlib import Path
 
 st.set_page_config(page_title="Market Overview | GJMIP", page_icon="📊", layout="wide")
 
+with st.sidebar:
+    if st.button("⬅️ Back to Home", use_container_width=True):
+        st.switch_page("app.py")
+
 # ── Data Loading ─────────────────────────────────────────────────────
 @st.cache_data
 def load_data():
