@@ -29,7 +29,6 @@ html, body, [class*="css"] {
 /* ── Hide Streamlit Defaults ───────────────────────────── */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
-header {visibility: hidden;}
 
 /* ── Sidebar Styling ───────────────────────────────────── */
 section[data-testid="stSidebar"] {
