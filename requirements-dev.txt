@@ -1,0 +1,15 @@
+# Development & testing dependencies
+-r requirements.txt
+
+# ── Testing ──────────────────────────────────────────────────────────
+pytest==8.3.4
+pytest-cov==6.0.0
+pytest-xdist==3.5.0
+
+# ── Linting & Formatting ────────────────────────────────────────────
+ruff==0.8.6
+
+# ── Type Checking ────────────────────────────────────────────────────
+mypy==1.14.1
+pandas-stubs==2.2.3.241126
+types-requests==2.32.0.20241016

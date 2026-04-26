@@ -1,24 +1,73 @@
+"""
+Pipeline Orchestrator
+=======================
+Runs the full ETL → NLP → Model Training pipeline.
 
-# Example cron usage:
-# 0 0 * * * python scripts/update_pipeline.py
+Usage:
+    python scripts/update_pipeline.py
+    # Or via cron: 0 0 * * * python scripts/update_pipeline.py
+"""
 
-import subprocess
-import logging
+from __future__ import annotations
 
-logging.basicConfig(level=logging.INFO, filename="logs/update_pipeline.log", format="%(asctime)s - %(levelname)s - %(message)s")
-logger = logging.getLogger(__name__)
+import sys
+import time
+from pathlib import Path
 
-def update_pipeline() -> None:
-    """Update the data pipeline by running ETL and NLP steps."""
+# Ensure project root is on the path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from config.logging_config import get_logger
+
+logger = get_logger("pipeline")
+
+
+def run_pipeline(skip_fetch: bool = False) -> None:
+    """
+    Execute the data pipeline end-to-end.
+
+    Parameters
+    ----------
+    skip_fetch : bool
+        If True, skip the API fetch step (useful when using synthetic data).
+    """
+    start = time.perf_counter()
+    logger.info("=" * 60)
+    logger.info("Pipeline started")
+
+    # Step 1: Fetch (optional)
+    if not skip_fetch:
+        try:
+            from etl.fetch_jobs import fetch_jobs
+            logger.info("[1/3] Fetching jobs from API…")
+            fetch_jobs()
+        except Exception:
+            logger.exception("ETL fetch failed — continuing with existing data")
+    else:
+        logger.info("[1/3] Skipping API fetch (skip_fetch=True)")
+
+    # Step 2: NLP skill extraction
     try:
-        logger.info("Starting ETL fetch jobs")
-        subprocess.run(["python", "etl/fetch_jobs.py"], check=True)
-        logger.info("Starting skill extraction")
-        subprocess.run(["python", "nlp/skill_extraction.py"], check=True)
-        logger.info("Pipeline updated successfully")
-    except subprocess.CalledProcessError as e:
-        logger.error(f"Pipeline failed: {e}")
+        from nlp.skill_extraction import process as extract_skills
+        logger.info("[2/3] Extracting skills…")
+        extract_skills()
+    except Exception:
+        logger.exception("Skill extraction failed")
         raise
 
+    # Step 3: Model training
+    try:
+        from models.train_model import train_model
+        logger.info("[3/3] Training salary model…")
+        train_model()
+    except Exception:
+        logger.exception("Model training failed")
+        raise
+
+    elapsed = time.perf_counter() - start
+    logger.info("Pipeline completed in %.1fs", elapsed)
+    logger.info("=" * 60)
+
+
 if __name__ == "__main__":
-    update_pipeline()
+    run_pipeline(skip_fetch="--skip-fetch" in sys.argv)
