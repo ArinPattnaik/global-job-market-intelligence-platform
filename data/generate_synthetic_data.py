@@ -8,15 +8,22 @@ Usage:
     python data/generate_synthetic_data.py
 """
 
+from __future__ import annotations
+
+import os
 import random
-import pandas as pd
-import numpy as np
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-import sys
-import os
+
+import numpy as np
+import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from config.logging_config import get_logger
+
+logger = get_logger("data_generator")
 
 random.seed(42)
 np.random.seed(42)
@@ -292,7 +299,7 @@ def generate_description(title, seniority, company, skills, exp_years):
 
 def generate_jobs(n: int = 5000) -> pd.DataFrame:
     """Generate n synthetic job postings."""
-    print(f"🔧 Generating {n} synthetic job postings...")
+    logger.info("Generating %d synthetic job postings…", n)
     jobs = []
     country_codes = list(COUNTRIES.keys())
     role_names = list(ROLES.keys())
@@ -382,9 +389,11 @@ def generate_jobs(n: int = 5000) -> pd.DataFrame:
         })
 
     df = pd.DataFrame(jobs)
-    print(f"✅ Generated {len(df)} job records across {df['country_name'].nunique()} countries")
-    print(f"   Roles: {df['category'].nunique()} | Companies: {df['company'].nunique()}")
-    print(f"   Date range: {df['posted_date'].min()} → {df['posted_date'].max()}")
+    logger.info(
+        "Generated %d jobs across %d countries (%d roles, %d companies)",
+        len(df), df["country_name"].nunique(),
+        df["category"].nunique(), df["company"].nunique(),
+    )
     return df
 
 
@@ -402,19 +411,16 @@ def main():
     # Save raw
     raw_path = raw_dir / "jobs_raw.csv"
     df.to_csv(raw_path, index=False)
-    print(f"💾 Raw data saved → {raw_path}")
+    logger.info("Raw data saved → %s", raw_path)
 
     # Save processed (same data, skills already generated)
     processed_path = processed_dir / "jobs_processed.csv"
     df.to_csv(processed_path, index=False)
-    print(f"💾 Processed data saved → {processed_path}")
-
-    # Quick summary
-    print("\n📊 Data Summary:")
-    print(f"   Rows: {len(df)}")
-    print(f"   Columns: {list(df.columns)}")
-    print(f"   Countries: {df['country_name'].value_counts().to_dict()}")
-    print(f"   Avg Salary: ${df['salary_avg'].mean():,.0f}")
+    logger.info("Processed data saved → %s", processed_path)
+    logger.info(
+        "Summary: %d rows, %d columns, avg salary $%,.0f",
+        len(df), len(df.columns), df["salary_avg"].mean(),
+    )
 
 
 if __name__ == "__main__":

@@ -1,28 +1,48 @@
+# ── Python ────────────────────────────────────────────────────────────
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual Environments ─────────────────────────────────────────────
 venv/
 .venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git
-.mypy_cache
-.pytest_cache
-.hypothesis
-.env
-models/*.pkl
-*.sqlite
-.DS_Store
+env/
+
+# ── IDE ──────────────────────────────────────────────────────────────
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+
+# ── Environment & Secrets ────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Data (keep structure, ignore large files) ────────────────────────
+# Uncomment these if data files are too large for git:
+# data/raw/*.csv
+# data/processed/*.csv
+
+# ── Models ───────────────────────────────────────────────────────────
+models/*.pkl
+models/*.json
+
+# ── Logs ─────────────────────────────────────────────────────────────
+logs/*.log
+
+# ── Testing ──────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ── OS ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

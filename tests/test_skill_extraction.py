@@ -1,9 +1,18 @@
 """
 Tests for NLP Skill Extraction Module
+========================================
+Comprehensive tests covering extraction, categorization, and edge cases.
 """
 
 import pytest
-from nlp.skill_extraction import extract_skills, get_skill_category, SKILL_TAXONOMY, ALL_SKILLS
+
+from nlp.skill_extraction import (
+    ALL_SKILLS,
+    SKILL_TAXONOMY,
+    extract_skills,
+    get_all_categories,
+    get_skill_category,
+)
 
 
 class TestExtractSkills:
@@ -17,13 +26,21 @@ class TestExtractSkills:
 
     def test_empty_input(self):
         assert extract_skills("") == ""
-        assert extract_skills("No tech skills here") == ""
+
+    def test_no_skills_found(self):
+        assert extract_skills("No tech skills here at all") == ""
 
     def test_none_input(self):
         assert extract_skills(None) == ""
 
+    def test_nan_input(self):
+        assert extract_skills(float("nan")) == ""
+
+    def test_numeric_input(self):
+        assert extract_skills(12345) == ""
+
     def test_multiple_skills(self):
-        text = "Expert in python, machine learning, tensorflow, and aws deployment"
+        text = "Expert in python, machine learning, tensorflow, and aws"
         result = extract_skills(text)
         skills = result.split(",")
         assert "python" in skills
@@ -55,50 +72,74 @@ class TestExtractSkills:
         assert "kubernetes" in skills
 
     def test_bi_skills(self):
-        text = "Create dashboards using tableau and power bi"
+        text = "Create dashboards in tableau and power bi for stakeholders"
         result = extract_skills(text)
         assert "tableau" in result
         assert "power bi" in result
 
+    def test_short_skill_word_boundary(self):
+        """Short skills like 'r' and 'go' should use word boundaries."""
+        text = "We use R for statistical analysis"
+        result = extract_skills(text)
+        assert "r" in result.split(",")
 
-class TestSkillCategory:
-    """Tests for skill categorization."""
+    def test_short_skill_no_false_positive(self):
+        """'r' should not match inside words like 'required'."""
+        text = "This role is required for the team"
+        result = extract_skills(text)
+        assert "r" not in result.split(",")
 
-    def test_python_category(self):
+    def test_multiword_skill(self):
+        text = "Experience with machine learning and deep learning"
+        result = extract_skills(text)
+        assert "machine learning" in result
+        assert "deep learning" in result
+
+    def test_returns_comma_separated_string(self):
+        text = "python sql aws"
+        result = extract_skills(text)
+        assert isinstance(result, str)
+        skills = result.split(",")
+        assert len(skills) >= 3
+
+
+class TestGetSkillCategory:
+    """Tests for the get_skill_category function."""
+
+    def test_known_skill(self):
         assert get_skill_category("python") == "Programming"
-
-    def test_sql_category(self):
         assert get_skill_category("sql") == "Data & Databases"
-
-    def test_aws_category(self):
         assert get_skill_category("aws") == "Cloud & Infrastructure"
 
-    def test_tensorflow_category(self):
-        assert get_skill_category("tensorflow") == "ML & AI"
+    def test_case_insensitive(self):
+        assert get_skill_category("Python") == "Programming"
+        assert get_skill_category("SQL") == "Data & Databases"
 
     def test_unknown_skill(self):
-        assert get_skill_category("unknown_skill_xyz") == "Other"
+        assert get_skill_category("nonexistent_skill") == "Other"
+
+    def test_whitespace_handling(self):
+        assert get_skill_category("  python  ") == "Programming"
+
+
+class TestTaxonomy:
+    """Tests for the skill taxonomy structure."""
 
     def test_taxonomy_not_empty(self):
         assert len(SKILL_TAXONOMY) > 0
-        assert len(ALL_SKILLS) >= 80  # We promised 80+ skills
 
-
-class TestSkillTaxonomy:
-    """Tests for the skill taxonomy structure."""
-
-    def test_all_categories_have_skills(self):
-        for category, skills in SKILL_TAXONOMY.items():
-            assert len(skills) > 0, f"Category '{category}' has no skills"
-
-    def test_no_duplicate_skills_across_categories(self):
-        seen = set()
-        duplicates = []
+    def test_all_skills_mapped(self):
         for category, skills in SKILL_TAXONOMY.items():
             for skill in skills:
-                if skill in seen:
-                    duplicates.append(skill)
-                seen.add(skill)
-        # Some overlap is intentional (e.g., data visualization appears in multiple)
-        # but we track it
-        assert len(duplicates) <= 3, f"Too many duplicates: {duplicates}"
+                assert skill in ALL_SKILLS
+                assert ALL_SKILLS[skill] == category
+
+    def test_get_all_categories(self):
+        categories = get_all_categories()
+        assert "Programming" in categories
+        assert "ML & AI" in categories
+        assert len(categories) == len(SKILL_TAXONOMY)
+
+    def test_minimum_skill_count(self):
+        """Taxonomy should have at least 80 skills."""
+        assert len(ALL_SKILLS) >= 80

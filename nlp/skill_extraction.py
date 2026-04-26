@@ -2,22 +2,23 @@
 Enhanced NLP Skill Extraction
 ================================
 80+ skill taxonomy with categorization for job description analysis.
+Uses compiled regex patterns for performance.
 """
 
-import pandas as pd
-import re
-import logging
-from pathlib import Path
+from __future__ import annotations
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
-logger = logging.getLogger(__name__)
+import re
+from typing import Optional
+
+import pandas as pd
+
+from config.logging_config import get_logger
+
+logger = get_logger("skill_extraction")
 
 # ── Skill Taxonomy (80+ skills organized by category) ────────────────
 
-SKILL_TAXONOMY = {
+SKILL_TAXONOMY: dict[str, list[str]] = {
     "Programming": [
         "python", "r", "java", "scala", "go", "rust", "julia", "c++",
         "javascript", "typescript", "bash", "shell", "matlab",
@@ -46,7 +47,7 @@ SKILL_TAXONOMY = {
     ],
     "Analytics & Statistics": [
         "statistics", "a/b testing", "data modeling", "etl",
-        "data visualization", "excel", "google analytics",
+        "excel", "google analytics",
         "requirements gathering", "stakeholder management",
     ],
     "DevOps & Tools": [
@@ -58,30 +59,44 @@ SKILL_TAXONOMY = {
     ],
 }
 
-# Flatten for fast lookup
-ALL_SKILLS = {}
-for category, skills in SKILL_TAXONOMY.items():
-    for skill in skills:
-        ALL_SKILLS[skill] = category
+# ── Derived lookups (built once at import time) ──────────────────────
+
+ALL_SKILLS: dict[str, str] = {}
+for _category, _skills in SKILL_TAXONOMY.items():
+    for _skill in _skills:
+        ALL_SKILLS[_skill] = _category
+
+# Pre-compile regex patterns for each skill (significant perf gain)
+_SKILL_PATTERNS: dict[str, re.Pattern[str]] = {}
+for _skill in ALL_SKILLS:
+    if len(_skill) <= 3:
+        _SKILL_PATTERNS[_skill] = re.compile(
+            r"\b" + re.escape(_skill) + r"\b", re.IGNORECASE
+        )
+    else:
+        # For longer skills a simple substring check is fine and faster
+        _SKILL_PATTERNS[_skill] = re.compile(
+            re.escape(_skill), re.IGNORECASE
+        )
 
 
-def extract_skills(text: str) -> str:
-    """Extract skills from a job description text."""
-    if not text or pd.isna(text):
+def extract_skills(text: Optional[str]) -> str:
+    """
+    Extract skills from a job description text.
+
+    Returns a comma-separated string of matched skill names (lowercase).
+    Returns an empty string when no skills are found or input is invalid.
+    """
+    if not text or (isinstance(text, float) and pd.isna(text)):
         return ""
-    text_lower = str(text).lower()
-    found = []
-    for skill in ALL_SKILLS:
-        if skill in found:
-            continue
-        # Use word-boundary regex for short skills to avoid false positives
-        if len(skill) <= 3:
-            pattern = r'\b' + re.escape(skill) + r'\b'
-            if re.search(pattern, text_lower):
-                found.append(skill)
-        else:
-            if skill in text_lower:
-                found.append(skill)
+
+    text_str = str(text)
+    found: list[str] = []
+
+    for skill, pattern in _SKILL_PATTERNS.items():
+        if pattern.search(text_str):
+            found.append(skill)
+
     return ",".join(found)
 
 
@@ -90,24 +105,29 @@ def get_skill_category(skill: str) -> str:
     return ALL_SKILLS.get(skill.lower().strip(), "Other")
 
 
-def get_all_categories() -> list:
+def get_all_categories() -> list[str]:
     """Return all skill categories."""
     return list(SKILL_TAXONOMY.keys())
 
 
 def process() -> None:
     """Process raw jobs data to extract skills."""
-    try:
-        base_dir = Path(__file__).resolve().parent.parent
-        raw_path = base_dir / "data" / "raw" / "jobs_raw.csv"
-        processed_path = base_dir / "data" / "processed" / "jobs_processed.csv"
+    from pathlib import Path
 
+    base_dir = Path(__file__).resolve().parent.parent
+    raw_path = base_dir / "data" / "raw" / "jobs_raw.csv"
+    processed_path = base_dir / "data" / "processed" / "jobs_processed.csv"
+
+    try:
         df = pd.read_csv(raw_path)
         df["skills"] = df["description"].apply(extract_skills)
         df.to_csv(processed_path, index=False)
-        logger.info(f"Skills extracted for {len(df)} jobs → {processed_path}")
-    except Exception as e:
-        logger.error(f"Error extracting skills: {e}")
+        logger.info("Skills extracted for %d jobs → %s", len(df), processed_path)
+    except FileNotFoundError:
+        logger.error("Raw data file not found: %s", raw_path)
+        raise
+    except Exception:
+        logger.exception("Error during skill extraction pipeline")
         raise
 
 

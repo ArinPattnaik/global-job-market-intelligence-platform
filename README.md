@@ -4,11 +4,11 @@
 
 ### Real-Time Analytics · NLP Skill Extraction · ML Salary Prediction
 
-[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io)
+[![CI](https://github.com/ArinPattnaik/global-job-market-intelligence-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/ArinPattnaik/global-job-market-intelligence-platform/actions)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://python.org)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.45-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Plotly](https://img.shields.io/badge/Plotly-3F4F75?logo=plotly&logoColor=white)](https://plotly.com)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)](https://scikit-learn.org)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
 **[🚀 Live Demo](https://global-job-market-intelligence-platform-arin.streamlit.app/)**
 
@@ -16,162 +16,178 @@
 
 ---
 
-## ✨ Features
+## Overview
 
-| Feature | Description |
-|---------|-------------|
-| **📊 Market Overview** | Interactive KPI dashboard with trend analysis, country/company breakdowns, and seniority distributions |
-| **🧠 Skill Analytics** | NLP-powered extraction of 80+ skills with category heatmaps and co-occurrence analysis |
-| **💰 Salary Intelligence** | Box plots, percentile analysis, skill premium insights, and top-paying company rankings |
-| **🌍 Geographic Insights** | World choropleth maps, city-level analytics, and cross-country comparisons |
-| **🔎 Job Explorer** | Advanced multi-filter search with styled job cards, skill badges, and CSV export |
-| **🤖 Salary Predictor** | GradientBoosting ML model with cross-country predictions and feature importance |
-| **📤 Universal Analyzer** | Upload any CSV/Excel for auto-analysis: distributions, correlations, time-series, scatter plots |
+An industrial-grade analytics platform that processes 5,000+ job postings across 8 countries, extracts skills using NLP, and predicts salaries with machine learning. Built with a modular architecture, comprehensive test suite, CI/CD pipeline, and production-ready Docker deployment.
+
+## Features
+
+| Module | Description |
+|--------|-------------|
+| **📊 Market Overview** | KPI dashboard with hiring trends, company breakdowns, and seniority distributions |
+| **🧠 Skill Analytics** | NLP extraction of 80+ skills with category heatmaps and co-occurrence analysis |
+| **💰 Salary Intelligence** | Box plots, percentile analysis, skill premiums, and top-paying company rankings |
+| **🌍 Geographic Insights** | Choropleth maps, city-level analytics, and cross-country comparisons |
+| **🔎 Job Explorer** | Multi-filter search with styled job cards, skill badges, and CSV export |
+| **🤖 Salary Predictor** | GradientBoosting model with data-driven 95% confidence intervals |
+| **📤 Universal Analyzer** | Upload any CSV/Excel for auto-analysis with smart visualizations |
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
-```mermaid
-graph TD
-    A[Synthetic Data Generator<br/>5,000+ jobs] -->|CSV| B[Raw Data]
-    B --> C[NLP Skill Extraction<br/>80+ skills taxonomy]
-    C --> D[Processed Dataset]
-    D --> E[ML Model Training<br/>GradientBoosting]
-    D --> F[Streamlit Dashboard]
-    E -->|Cached Model| F
-    G[User Upload<br/>Any CSV/Excel] --> F
-
-    F --> H[📊 Market Overview]
-    F --> I[🧠 Skill Analytics]
-    F --> J[💰 Salary Intelligence]
-    F --> K[🌍 Geographic Insights]
-    F --> L[🔎 Job Explorer]
-    F --> M[🤖 Salary Predictor]
-    F --> N[📤 Universal Analyzer]
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Streamlit Frontend                        │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐   │
+│  │Market│ │Skill │ │Salary│ │ Geo  │ │ Job  │ │Salary│   │
+│  │  Ovw │ │Analyt│ │Intel │ │Insght│ │Explor│ │Predct│   │
+│  └──┬───┘ └──┬───┘ └──┬───┘ └──┬───┘ └──┬───┘ └──┬───┘   │
+│     └────────┴────────┴────────┴────────┴────────┘         │
+│                         │                                   │
+│              ┌──────────┴──────────┐                        │
+│              │   Shared Utilities  │                        │
+│              │ data_loader │ chart │                        │
+│              │ ui_components       │                        │
+│              └──────────┬──────────┘                        │
+└─────────────────────────┼───────────────────────────────────┘
+                          │
+┌─────────────────────────┼───────────────────────────────────┐
+│                    Backend Layer                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌───────────┐  │
+│  │   ETL    │  │   NLP    │  │ ML Model │  │  Config   │  │
+│  │ Adzuna   │  │ 80+ Skill│  │ Gradient │  │ Settings  │  │
+│  │ API +    │  │ Taxonomy │  │ Boosting │  │ Logging   │  │
+│  │ Retry    │  │ + Regex  │  │ R²=0.93  │  │ Env-aware │  │
+│  └──────────┘  └──────────┘  └──────────┘  └───────────┘  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.10+
-- pip
-
-### Installation
+## Quick Start
 
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/ArinPattnaik/global-job-market-intelligence-platform.git
 cd global-job-market-intelligence-platform
 
-# Create virtual environment
-python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # Linux/Mac
-
-# Install dependencies
+# Setup
+python -m venv venv && source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
-```
 
-### Generate Data (Optional — sample data included)
-
-```bash
+# Generate data (sample data included)
 python data/generate_synthetic_data.py
-```
 
-### Run the Dashboard
-
-```bash
+# Run
 streamlit run app.py
 ```
 
-Open [http://localhost:8501](http://localhost:8501) in your browser.
+Open [http://localhost:8501](http://localhost:8501).
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-global-job-market-intelligence-platform/
-├── app.py                          # Main landing page + CSS theme
-├── pages/
-│   ├── 1_Market_Overview.py        # Hiring trends dashboard
-│   ├── 2_Skill_Analytics.py        # NLP skill demand analysis
-│   ├── 3_Salary_Intelligence.py    # Compensation analytics
-│   ├── 4_Geographic_Insights.py    # Regional comparisons
-│   ├── 5_Job_Explorer.py           # Advanced job search
-│   ├── 6_Salary_Predictor.py       # ML salary estimation
-│   └── 7_Data_Upload_Analyzer.py   # Universal data analyzer
-├── config/
-│   └── settings.py                 # Configuration & constants
+├── app.py                          # Main landing page
+├── pages/                          # Streamlit dashboard pages
+│   ├── 1_Market_Overview.py
+│   ├── 2_Skill_Analytics.py
+│   ├── 3_Salary_Intelligence.py
+│   ├── 4_Geographic_Insights.py
+│   ├── 5_Job_Explorer.py
+│   ├── 6_Salary_Predictor.py
+│   └── 7_Data_Upload_Analyzer.py
+├── config/                         # Configuration layer
+│   ├── settings.py                 # Centralized settings & constants
+│   └── logging_config.py           # Structured logging with rotation
+├── utils/                          # Shared utilities (DRY)
+│   ├── data_loader.py              # Validated data loading
+│   ├── chart_helpers.py            # Plotly layout defaults
+│   └── ui_components.py            # Reusable Streamlit components
+├── nlp/
+│   └── skill_extraction.py         # 80+ skill taxonomy with compiled regex
+├── models/
+│   └── train_model.py              # ML pipeline with cross-validation
+├── etl/
+│   └── fetch_jobs.py               # Adzuna API with retry logic
 ├── data/
 │   ├── generate_synthetic_data.py  # Synthetic data generator
 │   ├── raw/                        # Raw job postings
-│   └── processed/                  # Processed with skills
-├── nlp/
-│   └── skill_extraction.py         # 80+ skill taxonomy & NLP
-├── models/
-│   └── train_model.py              # Multi-feature ML pipeline
-├── etl/
-│   └── fetch_jobs.py               # Adzuna API integration
+│   └── processed/                  # Processed with extracted skills
 ├── scripts/
-│   └── update_pipeline.py          # Pipeline orchestration
-├── tests/
-│   └── test_skill_extraction.py    # Unit tests
-├── .streamlit/
-│   └── config.toml                 # Streamlit theme
-├── requirements.txt                # Python dependencies
-├── Dockerfile                      # Docker deployment
-└── README.md
+│   └── update_pipeline.py          # End-to-end pipeline orchestrator
+├── tests/                          # Comprehensive test suite (50 tests)
+│   ├── conftest.py                 # Shared fixtures
+│   ├── test_skill_extraction.py    # NLP tests
+│   ├── test_data_generation.py     # Data quality tests
+│   ├── test_model.py               # ML pipeline tests
+│   └── test_chart_helpers.py       # Utility tests
+├── assets/
+│   └── style.css                   # Shared CSS theme
+├── db/
+│   └── schema.sql                  # PostgreSQL schema with indexes
+├── .github/workflows/
+│   ├── ci.yml                      # Lint + Test + Docker CI
+│   └── release.yml                 # Auto-release on tags
+├── Dockerfile                      # Multi-stage, non-root production image
+├── pyproject.toml                  # Ruff, pytest, mypy configuration
+├── requirements.txt                # Pinned production dependencies
+├── requirements-dev.txt            # Dev/test dependencies
+└── CONTRIBUTING.md                 # Contribution guidelines
 ```
 
----
+## Tech Stack
 
-## 🛠️ Tech Stack
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Streamlit 1.45, Plotly 5.24 |
+| Data | Pandas 2.2, NumPy 1.26 |
+| NLP | Custom 80+ skill taxonomy, compiled regex |
+| ML | scikit-learn 1.5 (GradientBoostingRegressor, R²=0.93) |
+| Testing | pytest + pytest-cov (50 tests) |
+| Linting | ruff |
+| CI/CD | GitHub Actions (lint → test → Docker build) |
+| Deployment | Docker (multi-stage, non-root) |
+| Logging | Rotating file + console, structured format |
 
-- **Frontend:** Streamlit, Plotly
-- **Data Processing:** Pandas, NumPy
-- **NLP:** Custom 80+ skill taxonomy with category mapping
-- **ML:** scikit-learn (GradientBoostingRegressor)
-- **Deployment:** Streamlit Community Cloud
-- **Data Source:** Synthetic (5,000+ jobs, 8 countries, 88 companies)
-
----
-
-## 🐳 Docker
+## Docker
 
 ```bash
-docker build -t job-platform .
-docker run -p 8501:8501 job-platform
+docker build -t gjmip .
+docker run -p 8501:8501 gjmip
 ```
 
----
+## Development
 
-## 📊 Universal Data Analyzer
+```bash
+pip install -r requirements-dev.txt
 
-The platform includes a **Universal Data Analyzer** that accepts any CSV or Excel file:
+# Run tests
+pytest tests/ -v
 
-1. **Auto-Detection**: Identifies numeric, categorical, datetime, and text columns
-2. **Smart KPIs**: Row count, column count, missing data percentage
-3. **Auto-Charts**: Generates appropriate visualizations per column type
-4. **Correlations**: Heatmap + top correlated pairs
-5. **Time Series**: Detects date columns for trend analysis
-6. **Scatter Explorer**: Interactive X/Y/Color scatter plot builder
-7. **Export**: Download analyzed data as CSV or Excel
+# Run tests with coverage
+pytest tests/ -v --cov=nlp --cov=models --cov=utils
 
----
+# Lint
+ruff check .
 
-## 📄 License
+# Format
+ruff format .
+```
 
-This project is open source under the [MIT License](LICENSE).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
+
+## License
+
+[MIT](LICENSE)
 
 ---
 
 <div align="center">
 
-**Built with ❤️ by [Arin Pattnaik](https://github.com/ArinPattnaik)**
+**Built by [Arin Pattnaik](https://github.com/ArinPattnaik)**
 
 [🌐 Live Demo](https://global-job-market-intelligence-platform-arin.streamlit.app/) · [⭐ Star on GitHub](https://github.com/ArinPattnaik/global-job-market-intelligence-platform)
 

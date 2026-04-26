@@ -1,0 +1,72 @@
+<style>
+/* ============================================================
+   Global Job Market Intelligence Platform — Theme
+   ============================================================ */
+
+/* ── Sidebar ───────────────────────────────────────────────── */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0D1117 0%, #161B22 100%);
+    border-right: 1px solid rgba(102, 126, 234, 0.15);
+}
+section[data-testid="stSidebar"] .stMarkdown p {
+    color: #8B949E;
+}
+
+/* ── Metric Cards ──────────────────────────────────────────── */
+div[data-testid="stMetric"] {
+    background: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);
+    border: 1px solid rgba(102,126,234,0.15);
+    border-radius: 12px;
+    padding: 16px 20px;
+    transition: all 0.3s ease;
+}
+div[data-testid="stMetric"]:hover {
+    border-color: rgba(102,126,234,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102,126,234,0.15);
+}
+div[data-testid="stMetric"] label {
+    color: #8B949E !important;
+    font-weight: 500;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #E6EDF3 !important;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────── */
+button[data-baseweb="tab"] {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #8B949E;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s ease;
+}
+button[data-baseweb="tab"]:hover { color: #667EEA; }
+button[data-baseweb="tab"][aria-selected="true"] { color: #667EEA; }
+
+/* ── DataFrames ────────────────────────────────────────────── */
+div[data-testid="stDataFrame"] {
+    border: 1px solid rgba(102,126,234,0.15);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ── Expander ──────────────────────────────────────────────── */
+details {
+    border: 1px solid rgba(102,126,234,0.12) !important;
+    border-radius: 12px !important;
+    background: rgba(102,126,234,0.03);
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0E1117; }
+::-webkit-scrollbar-thumb { background: #30363D; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484F58; }
+</style>
