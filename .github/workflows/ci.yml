@@ -44,4 +44,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker build -t gjmip:test .
-      - run: docker run --rm gjmip:test python -c "import streamlit; print(streamlit.__version__)"
+      - run: docker run --rm --entrypoint python gjmip:test -c "import streamlit; print(streamlit.__version__)"
