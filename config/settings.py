@@ -4,6 +4,8 @@ Global Job Market Intelligence Platform — Configuration
 Environment-aware, validated configuration with sensible defaults.
 """
 
+from __future__ import annotations
+
 import os
 from pathlib import Path
 
