@@ -33,20 +33,46 @@ np.random.seed(42)
 COUNTRIES = {
     "us": {
         "name": "United States",
-        "cities": ["New York", "San Francisco", "Seattle", "Austin", "Boston",
-                    "Chicago", "Los Angeles", "Denver", "Washington DC", "Atlanta"],
+        "cities": [
+            "New York",
+            "San Francisco",
+            "Seattle",
+            "Austin",
+            "Boston",
+            "Chicago",
+            "Los Angeles",
+            "Denver",
+            "Washington DC",
+            "Atlanta",
+        ],
         "salary_base": 125000,
     },
     "gb": {
         "name": "United Kingdom",
-        "cities": ["London", "Manchester", "Edinburgh", "Birmingham", "Bristol",
-                    "Cambridge", "Leeds", "Glasgow"],
+        "cities": [
+            "London",
+            "Manchester",
+            "Edinburgh",
+            "Birmingham",
+            "Bristol",
+            "Cambridge",
+            "Leeds",
+            "Glasgow",
+        ],
         "salary_base": 72000,
     },
     "in": {
         "name": "India",
-        "cities": ["Bangalore", "Mumbai", "Hyderabad", "Delhi NCR", "Pune",
-                    "Chennai", "Kolkata", "Noida"],
+        "cities": [
+            "Bangalore",
+            "Mumbai",
+            "Hyderabad",
+            "Delhi NCR",
+            "Pune",
+            "Chennai",
+            "Kolkata",
+            "Noida",
+        ],
         "salary_base": 18000,
     },
     "ca": {
@@ -84,20 +110,53 @@ ROLES = {
     "Data Scientist": {
         "weight": 0.18,
         "salary_mult": 1.15,
-        "core_skills": ["python", "machine learning", "statistics", "deep learning", "pandas", "numpy", "scikit-learn"],
-        "optional_skills": ["tensorflow", "pytorch", "r", "nlp", "computer vision", "a/b testing", "sql"],
+        "core_skills": [
+            "python",
+            "machine learning",
+            "statistics",
+            "deep learning",
+            "pandas",
+            "numpy",
+            "scikit-learn",
+        ],
+        "optional_skills": [
+            "tensorflow",
+            "pytorch",
+            "r",
+            "nlp",
+            "computer vision",
+            "a/b testing",
+            "sql",
+        ],
     },
     "Data Analyst": {
         "weight": 0.20,
         "salary_mult": 0.85,
         "core_skills": ["sql", "excel", "python", "data visualization", "statistics"],
-        "optional_skills": ["tableau", "power bi", "r", "pandas", "looker", "google analytics", "a/b testing"],
+        "optional_skills": [
+            "tableau",
+            "power bi",
+            "r",
+            "pandas",
+            "looker",
+            "google analytics",
+            "a/b testing",
+        ],
     },
     "Data Engineer": {
         "weight": 0.16,
         "salary_mult": 1.10,
         "core_skills": ["python", "sql", "spark", "airflow", "etl"],
-        "optional_skills": ["kafka", "aws", "docker", "kubernetes", "dbt", "snowflake", "scala", "hadoop"],
+        "optional_skills": [
+            "kafka",
+            "aws",
+            "docker",
+            "kubernetes",
+            "dbt",
+            "snowflake",
+            "scala",
+            "hadoop",
+        ],
     },
     "ML Engineer": {
         "weight": 0.12,
@@ -120,7 +179,13 @@ ROLES = {
     "Analytics Manager": {
         "weight": 0.04,
         "salary_mult": 1.35,
-        "core_skills": ["sql", "python", "leadership", "stakeholder management", "data visualization"],
+        "core_skills": [
+            "sql",
+            "python",
+            "leadership",
+            "stakeholder management",
+            "data visualization",
+        ],
         "optional_skills": ["tableau", "power bi", "a/b testing", "strategy", "agile"],
     },
     "DevOps Engineer": {
@@ -133,7 +198,14 @@ ROLES = {
         "weight": 0.04,
         "salary_mult": 1.40,
         "core_skills": ["python", "deep learning", "pytorch", "nlp", "statistics"],
-        "optional_skills": ["tensorflow", "computer vision", "reinforcement learning", "transformers", "llm", "research"],
+        "optional_skills": [
+            "tensorflow",
+            "computer vision",
+            "reinforcement learning",
+            "transformers",
+            "llm",
+            "research",
+        ],
     },
     "Cloud Engineer": {
         "weight": 0.05,
@@ -167,30 +239,101 @@ JOB_TYPES = {
 
 COMPANIES = [
     # Big Tech
-    "Google", "Microsoft", "Amazon", "Apple", "Meta", "Netflix", "Uber",
-    "Salesforce", "Adobe", "Oracle", "IBM", "Intel", "Cisco", "VMware",
+    "Google",
+    "Microsoft",
+    "Amazon",
+    "Apple",
+    "Meta",
+    "Netflix",
+    "Uber",
+    "Salesforce",
+    "Adobe",
+    "Oracle",
+    "IBM",
+    "Intel",
+    "Cisco",
+    "VMware",
     # Fintech / Finance
-    "JPMorgan Chase", "Goldman Sachs", "Morgan Stanley", "Stripe", "Square",
-    "PayPal", "Bloomberg", "Capital One", "Revolut", "Wise",
+    "JPMorgan Chase",
+    "Goldman Sachs",
+    "Morgan Stanley",
+    "Stripe",
+    "Square",
+    "PayPal",
+    "Bloomberg",
+    "Capital One",
+    "Revolut",
+    "Wise",
     # Consulting
-    "McKinsey", "BCG", "Deloitte", "Accenture", "PwC", "EY", "KPMG",
+    "McKinsey",
+    "BCG",
+    "Deloitte",
+    "Accenture",
+    "PwC",
+    "EY",
+    "KPMG",
     # Data / Cloud
-    "Snowflake", "Databricks", "Palantir", "Datadog", "Confluent",
-    "MongoDB", "Elastic", "Cloudera", "Teradata",
+    "Snowflake",
+    "Databricks",
+    "Palantir",
+    "Datadog",
+    "Confluent",
+    "MongoDB",
+    "Elastic",
+    "Cloudera",
+    "Teradata",
     # AI / ML
-    "OpenAI", "Anthropic", "DeepMind", "Hugging Face", "Scale AI",
-    "DataRobot", "H2O.ai", "Weights & Biases",
+    "OpenAI",
+    "Anthropic",
+    "DeepMind",
+    "Hugging Face",
+    "Scale AI",
+    "DataRobot",
+    "H2O.ai",
+    "Weights & Biases",
     # E-commerce / Consumer
-    "Shopify", "Instacart", "DoorDash", "Airbnb", "Spotify", "Pinterest",
-    "Snap", "Reddit", "LinkedIn", "Twitter",
+    "Shopify",
+    "Instacart",
+    "DoorDash",
+    "Airbnb",
+    "Spotify",
+    "Pinterest",
+    "Snap",
+    "Reddit",
+    "LinkedIn",
+    "Twitter",
     # Healthcare
-    "UnitedHealth", "Optum", "Cerner", "Epic Systems", "Moderna",
+    "UnitedHealth",
+    "Optum",
+    "Cerner",
+    "Epic Systems",
+    "Moderna",
     # Startups
-    "TechFlow AI", "DataSphere", "NeuralPath", "CloudMetrics", "QuantumLeap",
-    "ByteScale", "InfoPulse", "CyberNova", "AlgoRithm Inc", "PixelForge",
-    "StreamData", "CodeCraft", "VectorAI", "PredictHub", "GraphCore",
-    "InsightIQ", "DeepAnalytics", "FlowState", "NexGen Data", "SmartPipe",
-    "Cortex Labs", "Synthetix AI", "DataMesh Co", "PipelineIO", "InferAI",
+    "TechFlow AI",
+    "DataSphere",
+    "NeuralPath",
+    "CloudMetrics",
+    "QuantumLeap",
+    "ByteScale",
+    "InfoPulse",
+    "CyberNova",
+    "AlgoRithm Inc",
+    "PixelForge",
+    "StreamData",
+    "CodeCraft",
+    "VectorAI",
+    "PredictHub",
+    "GraphCore",
+    "InsightIQ",
+    "DeepAnalytics",
+    "FlowState",
+    "NexGen Data",
+    "SmartPipe",
+    "Cortex Labs",
+    "Synthetix AI",
+    "DataMesh Co",
+    "PipelineIO",
+    "InferAI",
 ]
 
 # ── Description Templates ───────────────────────────────────────────
@@ -200,38 +343,49 @@ DESC_TEMPLATES = [
     "The ideal candidate will have strong expertise in {skills_str}. "
     "You will work on {project} and collaborate with cross-functional teams "
     "to drive data-driven decision making. {requirement}",
-
     "Join {company} as a {seniority} {title}! "
     "In this role, you'll leverage {skills_str} to {action}. "
     "We value individuals who are passionate about {domain} "
     "and can deliver impactful results. {requirement}",
-
     "{company} is seeking a talented {seniority} {title} to help us {goal}. "
     "You'll use {skills_str} to build scalable solutions. "
     "This role requires {exp_years}+ years of experience and a strong "
     "background in {domain}. {requirement}",
-
     "Exciting opportunity for a {seniority} {title} at {company}! "
     "We need someone with hands-on experience in {skills_str}. "
     "You will be responsible for {action} and mentoring junior team members. "
     "{requirement}",
-
     "As a {seniority} {title} at {company}, you will {action} using {skills_str}. "
     "This is a unique opportunity to work on cutting-edge {domain} projects "
     "in a fast-paced environment. {exp_years}+ years of relevant experience required. "
     "{requirement}",
 ]
 
-TEAMS = ["analytics", "data science", "engineering", "machine learning",
-         "platform", "growth", "product", "infrastructure", "research"]
+TEAMS = [
+    "analytics",
+    "data science",
+    "engineering",
+    "machine learning",
+    "platform",
+    "growth",
+    "product",
+    "infrastructure",
+    "research",
+]
 
 PROJECTS = [
-    "building ML pipelines at scale", "real-time data processing systems",
-    "customer analytics and segmentation", "recommendation engines",
-    "natural language processing solutions", "predictive modeling frameworks",
-    "data warehouse modernization", "cloud migration projects",
-    "business intelligence dashboards", "fraud detection systems",
-    "supply chain optimization", "marketing attribution models",
+    "building ML pipelines at scale",
+    "real-time data processing systems",
+    "customer analytics and segmentation",
+    "recommendation engines",
+    "natural language processing solutions",
+    "predictive modeling frameworks",
+    "data warehouse modernization",
+    "cloud migration projects",
+    "business intelligence dashboards",
+    "fraud detection systems",
+    "supply chain optimization",
+    "marketing attribution models",
 ]
 
 ACTIONS = [
@@ -248,15 +402,24 @@ ACTIONS = [
 ]
 
 GOALS = [
-    "scale our data platform", "transform how we use data",
-    "build next-generation analytics", "revolutionize our data infrastructure",
-    "drive innovation through data science", "modernize our analytics stack",
+    "scale our data platform",
+    "transform how we use data",
+    "build next-generation analytics",
+    "revolutionize our data infrastructure",
+    "drive innovation through data science",
+    "modernize our analytics stack",
 ]
 
 DOMAINS = [
-    "data science", "machine learning", "analytics", "big data",
-    "artificial intelligence", "business intelligence", "data engineering",
-    "cloud computing", "statistical modeling",
+    "data science",
+    "machine learning",
+    "analytics",
+    "big data",
+    "artificial intelligence",
+    "business intelligence",
+    "data engineering",
+    "cloud computing",
+    "statistical modeling",
 ]
 
 REQUIREMENTS = [
@@ -335,8 +498,9 @@ def generate_jobs(n: int = 5000) -> pd.DataFrame:
         # Pick skills
         n_core = random.randint(2, min(4, len(role_info["core_skills"])))
         n_optional = random.randint(1, min(3, len(role_info["optional_skills"])))
-        skills = random.sample(role_info["core_skills"], n_core) + \
-                 random.sample(role_info["optional_skills"], n_optional)
+        skills = random.sample(role_info["core_skills"], n_core) + random.sample(
+            role_info["optional_skills"], n_optional
+        )
 
         # Experience
         exp_years = random.randint(*seniority_info["exp_range"])
@@ -368,31 +532,35 @@ def generate_jobs(n: int = 5000) -> pd.DataFrame:
         # Description
         description = generate_description(role, seniority, company, skills, exp_years)
 
-        jobs.append({
-            "job_id": f"JOB-{i+1:05d}",
-            "title": full_title,
-            "category": role,
-            "seniority": seniority,
-            "company": company,
-            "city": city,
-            "country": country_code,
-            "country_name": country_info["name"],
-            "location": f"{city}, {country_info['name']}",
-            "salary_min": salary_min,
-            "salary_max": salary_max,
-            "salary_avg": (salary_min + salary_max) // 2,
-            "description": description,
-            "skills": ",".join(skills),
-            "job_type": job_type,
-            "experience_years": exp_years,
-            "posted_date": posted_date.strftime("%Y-%m-%d"),
-        })
+        jobs.append(
+            {
+                "job_id": f"JOB-{i+1:05d}",
+                "title": full_title,
+                "category": role,
+                "seniority": seniority,
+                "company": company,
+                "city": city,
+                "country": country_code,
+                "country_name": country_info["name"],
+                "location": f"{city}, {country_info['name']}",
+                "salary_min": salary_min,
+                "salary_max": salary_max,
+                "salary_avg": (salary_min + salary_max) // 2,
+                "description": description,
+                "skills": ",".join(skills),
+                "job_type": job_type,
+                "experience_years": exp_years,
+                "posted_date": posted_date.strftime("%Y-%m-%d"),
+            }
+        )
 
     df = pd.DataFrame(jobs)
     logger.info(
         "Generated %d jobs across %d countries (%d roles, %d companies)",
-        len(df), df["country_name"].nunique(),
-        df["category"].nunique(), df["company"].nunique(),
+        len(df),
+        df["country_name"].nunique(),
+        df["category"].nunique(),
+        df["company"].nunique(),
     )
     return df
 
@@ -419,7 +587,9 @@ def main():
     logger.info("Processed data saved → %s", processed_path)
     logger.info(
         "Summary: %d rows, %d columns, avg salary $%,.0f",
-        len(df), len(df.columns), df["salary_avg"].mean(),
+        len(df),
+        len(df.columns),
+        df["salary_avg"].mean(),
     )
 
 

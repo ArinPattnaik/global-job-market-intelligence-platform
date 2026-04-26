@@ -4,8 +4,6 @@ Tests for NLP Skill Extraction Module
 Comprehensive tests covering extraction, categorization, and edge cases.
 """
 
-import pytest
-
 from nlp.skill_extraction import (
     ALL_SKILLS,
     SKILL_TAXONOMY,

@@ -39,6 +39,7 @@ def run_pipeline(skip_fetch: bool = False) -> None:
     if not skip_fetch:
         try:
             from etl.fetch_jobs import fetch_jobs
+
             logger.info("[1/3] Fetching jobs from API…")
             fetch_jobs()
         except Exception:
@@ -49,6 +50,7 @@ def run_pipeline(skip_fetch: bool = False) -> None:
     # Step 2: NLP skill extraction
     try:
         from nlp.skill_extraction import process as extract_skills
+
         logger.info("[2/3] Extracting skills…")
         extract_skills()
     except Exception:
@@ -58,6 +60,7 @@ def run_pipeline(skip_fetch: bool = False) -> None:
     # Step 3: Model training
     try:
         from models.train_model import train_model
+
         logger.info("[3/3] Training salary model…")
         train_model()
     except Exception:

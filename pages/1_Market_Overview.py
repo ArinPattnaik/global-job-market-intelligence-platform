@@ -6,9 +6,7 @@ Interactive dashboard with KPIs, trends, and hiring analytics.
 
 from __future__ import annotations
 
-import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import streamlit as st
 
 from config.settings import COLORS, SENIORITY_ORDER
@@ -84,15 +82,12 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("#### 📈 Monthly Hiring Trend")
-    monthly = (
-        filtered.set_index("posted_date")
-        .resample("M")["job_id"]
-        .count()
-        .reset_index()
-    )
+    monthly = filtered.set_index("posted_date").resample("M")["job_id"].count().reset_index()
     monthly.columns = ["Month", "Jobs"]
     fig_trend = px.area(
-        monthly, x="Month", y="Jobs",
+        monthly,
+        x="Month",
+        y="Jobs",
         color_discrete_sequence=["#667EEA"],
         template="plotly_dark",
     )
@@ -105,12 +100,19 @@ with col2:
     top_companies = filtered["company"].value_counts().head(15).reset_index()
     top_companies.columns = ["Company", "Jobs"]
     fig_comp = px.bar(
-        top_companies, x="Jobs", y="Company", orientation="h",
-        color="Jobs", color_continuous_scale=GRADIENT_PURPLE,
+        top_companies,
+        x="Jobs",
+        y="Company",
+        orientation="h",
+        color="Jobs",
+        color_continuous_scale=GRADIENT_PURPLE,
         template="plotly_dark",
     )
     apply_default_layout(
-        fig_comp, height=350, show_legend=False, coloraxis_showscale=False,
+        fig_comp,
+        height=350,
+        show_legend=False,
+        coloraxis_showscale=False,
     )
     fig_comp.update_yaxes(autorange="reversed")
     st.plotly_chart(fig_comp, use_container_width=True)
@@ -123,8 +125,11 @@ with col3:
     country_counts = filtered["country_name"].value_counts().reset_index()
     country_counts.columns = ["Country", "Jobs"]
     fig_country = px.pie(
-        country_counts, values="Jobs", names="Country",
-        hole=0.5, color_discrete_sequence=COLORS,
+        country_counts,
+        values="Jobs",
+        names="Country",
+        hole=0.5,
+        color_discrete_sequence=COLORS,
         template="plotly_dark",
     )
     apply_default_layout(fig_country, height=350)
@@ -135,8 +140,12 @@ with col4:
     role_counts = filtered["category"].value_counts().reset_index()
     role_counts.columns = ["Role", "Jobs"]
     fig_role = px.bar(
-        role_counts, x="Jobs", y="Role", orientation="h",
-        color="Role", color_discrete_sequence=COLORS,
+        role_counts,
+        x="Jobs",
+        y="Role",
+        orientation="h",
+        color="Role",
+        color_discrete_sequence=COLORS,
         template="plotly_dark",
     )
     apply_default_layout(fig_role, height=350, show_legend=False)
@@ -145,17 +154,14 @@ with col4:
 
 # ── Seniority Distribution ──────────────────────────────────────────
 st.markdown("#### 📊 Seniority Distribution")
-sen_counts = (
-    filtered["seniority"]
-    .value_counts()
-    .reindex(SENIORITY_ORDER)
-    .dropna()
-    .reset_index()
-)
+sen_counts = filtered["seniority"].value_counts().reindex(SENIORITY_ORDER).dropna().reset_index()
 sen_counts.columns = ["Seniority", "Count"]
 fig_sen = px.bar(
-    sen_counts, x="Seniority", y="Count",
-    color="Seniority", color_discrete_sequence=COLORS,
+    sen_counts,
+    x="Seniority",
+    y="Count",
+    color="Seniority",
+    color_discrete_sequence=COLORS,
     template="plotly_dark",
 )
 apply_default_layout(fig_sen, height=300, show_legend=False)

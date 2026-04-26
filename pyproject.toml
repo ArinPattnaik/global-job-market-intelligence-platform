@@ -22,8 +22,13 @@ select = [
 ]
 ignore = [
     "E501",   # line too long (handled by formatter)
+    "E402",   # module level import not at top (Streamlit requires st.set_page_config first)
     "B008",   # function call in default arg (Streamlit pattern)
+    "N806",   # variable in function should be lowercase (scikit-learn convention uses X)
+    "SIM105", # contextlib.suppress (less readable for simple cases)
     "SIM108", # ternary operator
+    "TC002",  # move third-party import into type-checking block (over-pedantic)
+    "TC003",  # move stdlib import into type-checking block (over-pedantic)
 ]
 
 [tool.ruff.lint.isort]

@@ -6,7 +6,6 @@ Environment-aware, validated configuration with sensible defaults.
 
 import os
 from pathlib import Path
-from typing import List
 
 from dotenv import load_dotenv
 
@@ -32,14 +31,26 @@ for d in [RAW_DIR, PROCESSED_DIR, MODEL_DIR, LOG_DIR]:
 ADZUNA_APP_ID: str | None = os.getenv("ADZUNA_APP_ID")
 ADZUNA_APP_KEY: str | None = os.getenv("ADZUNA_APP_KEY")
 
-COUNTRIES: List[str] = os.getenv("COUNTRIES", "us,gb,in,ca,au,de,sg,fr").split(",")
+COUNTRIES: list[str] = os.getenv("COUNTRIES", "us,gb,in,ca,au,de,sg,fr").split(",")
 QUERY: str = os.getenv("QUERY", "data analyst")
 
 # ── UI Theme ─────────────────────────────────────────────────────────
-COLORS: List[str] = [
-    "#667EEA", "#764BA2", "#48BB78", "#ED8936", "#E53E3E",
-    "#38B2AC", "#D69E2E", "#9F7AEA", "#FC8181", "#4FD1C5",
-    "#F6AD55", "#68D391", "#63B3ED", "#B794F4", "#FBD38D",
+COLORS: list[str] = [
+    "#667EEA",
+    "#764BA2",
+    "#48BB78",
+    "#ED8936",
+    "#E53E3E",
+    "#38B2AC",
+    "#D69E2E",
+    "#9F7AEA",
+    "#FC8181",
+    "#4FD1C5",
+    "#F6AD55",
+    "#68D391",
+    "#63B3ED",
+    "#B794F4",
+    "#FBD38D",
 ]
 
 GRADIENT_START = "#667EEA"
@@ -73,7 +84,7 @@ SENIORITY_COLORS: dict[str, str] = {
     "Principal": "#ED8936",
 }
 
-SENIORITY_ORDER: List[str] = ["Junior", "Mid", "Senior", "Lead", "Principal"]
+SENIORITY_ORDER: list[str] = ["Junior", "Mid", "Senior", "Lead", "Principal"]
 
 # ── App Constants ────────────────────────────────────────────────────
 APP_TITLE = "Global Job Market Intelligence Platform"

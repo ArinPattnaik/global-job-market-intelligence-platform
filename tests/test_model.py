@@ -6,11 +6,9 @@ Validates model training, prediction, and metric quality.
 
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 import pytest
 
 from data.generate_synthetic_data import generate_jobs

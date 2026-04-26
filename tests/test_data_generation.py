@@ -8,7 +8,6 @@ import pandas as pd
 import pytest
 
 from data.generate_synthetic_data import (
-    COMPANIES,
     COUNTRIES,
     JOB_TYPES,
     ROLES,
@@ -27,11 +26,23 @@ class TestDataSchema:
     """Verify the generated DataFrame has the correct structure."""
 
     EXPECTED_COLUMNS = {
-        "job_id", "title", "category", "seniority", "company",
-        "city", "country", "country_name", "location",
-        "salary_min", "salary_max", "salary_avg",
-        "description", "skills", "job_type",
-        "experience_years", "posted_date",
+        "job_id",
+        "title",
+        "category",
+        "seniority",
+        "company",
+        "city",
+        "country",
+        "country_name",
+        "location",
+        "salary_min",
+        "salary_max",
+        "salary_avg",
+        "description",
+        "skills",
+        "job_type",
+        "experience_years",
+        "posted_date",
     }
 
     def test_has_all_columns(self, generated_df: pd.DataFrame):

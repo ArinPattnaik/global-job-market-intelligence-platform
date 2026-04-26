@@ -7,7 +7,6 @@ Structured logging with file rotation and consistent formatting.
 import logging
 import sys
 from logging.handlers import RotatingFileHandler
-from pathlib import Path
 
 from config.settings import (
     LOG_BACKUP_COUNT,

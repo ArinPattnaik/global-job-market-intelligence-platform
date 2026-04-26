@@ -8,7 +8,6 @@ Uses compiled regex patterns for performance.
 from __future__ import annotations
 
 import re
-from typing import Optional
 
 import pandas as pd
 
@@ -20,42 +19,109 @@ logger = get_logger("skill_extraction")
 
 SKILL_TAXONOMY: dict[str, list[str]] = {
     "Programming": [
-        "python", "r", "java", "scala", "go", "rust", "julia", "c++",
-        "javascript", "typescript", "bash", "shell", "matlab",
+        "python",
+        "r",
+        "java",
+        "scala",
+        "go",
+        "rust",
+        "julia",
+        "c++",
+        "javascript",
+        "typescript",
+        "bash",
+        "shell",
+        "matlab",
     ],
     "Data & Databases": [
-        "sql", "nosql", "mongodb", "postgresql", "mysql", "redis",
-        "elasticsearch", "cassandra", "dynamodb", "neo4j",
+        "sql",
+        "nosql",
+        "mongodb",
+        "postgresql",
+        "mysql",
+        "redis",
+        "elasticsearch",
+        "cassandra",
+        "dynamodb",
+        "neo4j",
     ],
     "Big Data": [
-        "spark", "hadoop", "kafka", "flink", "hive", "airflow", "dbt",
-        "nifi", "presto", "trino",
+        "spark",
+        "hadoop",
+        "kafka",
+        "flink",
+        "hive",
+        "airflow",
+        "dbt",
+        "nifi",
+        "presto",
+        "trino",
     ],
     "Cloud & Infrastructure": [
-        "aws", "azure", "gcp", "snowflake", "databricks", "bigquery",
-        "redshift", "docker", "kubernetes", "terraform",
+        "aws",
+        "azure",
+        "gcp",
+        "snowflake",
+        "databricks",
+        "bigquery",
+        "redshift",
+        "docker",
+        "kubernetes",
+        "terraform",
     ],
     "ML & AI": [
-        "machine learning", "deep learning", "tensorflow", "pytorch",
-        "scikit-learn", "keras", "xgboost", "lightgbm", "mlflow",
-        "huggingface", "nlp", "computer vision", "reinforcement learning",
-        "llm", "transformers",
+        "machine learning",
+        "deep learning",
+        "tensorflow",
+        "pytorch",
+        "scikit-learn",
+        "keras",
+        "xgboost",
+        "lightgbm",
+        "mlflow",
+        "huggingface",
+        "nlp",
+        "computer vision",
+        "reinforcement learning",
+        "llm",
+        "transformers",
     ],
     "BI & Visualization": [
-        "tableau", "power bi", "looker", "metabase", "superset", "qlik",
-        "data visualization", "d3.js",
+        "tableau",
+        "power bi",
+        "looker",
+        "metabase",
+        "superset",
+        "qlik",
+        "data visualization",
+        "d3.js",
     ],
     "Analytics & Statistics": [
-        "statistics", "a/b testing", "data modeling", "etl",
-        "excel", "google analytics",
-        "requirements gathering", "stakeholder management",
+        "statistics",
+        "a/b testing",
+        "data modeling",
+        "etl",
+        "excel",
+        "google analytics",
+        "requirements gathering",
+        "stakeholder management",
     ],
     "DevOps & Tools": [
-        "ci/cd", "git", "jenkins", "ansible", "linux", "jira",
-        "confluence", "fastapi", "flask",
+        "ci/cd",
+        "git",
+        "jenkins",
+        "ansible",
+        "linux",
+        "jira",
+        "confluence",
+        "fastapi",
+        "flask",
     ],
     "Soft Skills": [
-        "leadership", "agile", "strategy", "research",
+        "leadership",
+        "agile",
+        "strategy",
+        "research",
     ],
 }
 
@@ -70,17 +136,13 @@ for _category, _skills in SKILL_TAXONOMY.items():
 _SKILL_PATTERNS: dict[str, re.Pattern[str]] = {}
 for _skill in ALL_SKILLS:
     if len(_skill) <= 3:
-        _SKILL_PATTERNS[_skill] = re.compile(
-            r"\b" + re.escape(_skill) + r"\b", re.IGNORECASE
-        )
+        _SKILL_PATTERNS[_skill] = re.compile(r"\b" + re.escape(_skill) + r"\b", re.IGNORECASE)
     else:
         # For longer skills a simple substring check is fine and faster
-        _SKILL_PATTERNS[_skill] = re.compile(
-            re.escape(_skill), re.IGNORECASE
-        )
+        _SKILL_PATTERNS[_skill] = re.compile(re.escape(_skill), re.IGNORECASE)
 
 
-def extract_skills(text: Optional[str]) -> str:
+def extract_skills(text: str | None) -> str:
     """
     Extract skills from a job description text.
 

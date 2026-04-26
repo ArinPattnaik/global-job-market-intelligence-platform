@@ -12,7 +12,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from config.settings import CATEGORY_COLORS, COLORS, HEATMAP_SKILL_COUNT, TOP_SKILLS_COUNT
+from config.settings import CATEGORY_COLORS, HEATMAP_SKILL_COUNT, TOP_SKILLS_COUNT
 from nlp.skill_extraction import SKILL_TAXONOMY, get_skill_category
 from utils.chart_helpers import HEATMAP_SCALE, apply_default_layout
 from utils.data_loader import load_processed_data, require_data
@@ -83,8 +83,12 @@ with col1:
     top_skills["Category"] = top_skills["Skill"].apply(get_skill_category)
 
     fig = px.bar(
-        top_skills, x="Count", y="Skill", orientation="h",
-        color="Category", color_discrete_map=CATEGORY_COLORS,
+        top_skills,
+        x="Count",
+        y="Skill",
+        orientation="h",
+        color="Category",
+        color_discrete_map=CATEGORY_COLORS,
         template="plotly_dark",
     )
     apply_default_layout(fig, height=600, legend_horizontal=True)
@@ -96,8 +100,12 @@ with col2:
     cat_counts = filtered_skills.apply(get_skill_category).value_counts().reset_index()
     cat_counts.columns = ["Category", "Count"]
     fig_cat = px.pie(
-        cat_counts, values="Count", names="Category",
-        hole=0.5, color="Category", color_discrete_map=CATEGORY_COLORS,
+        cat_counts,
+        values="Count",
+        names="Category",
+        hole=0.5,
+        color="Category",
+        color_discrete_map=CATEGORY_COLORS,
         template="plotly_dark",
     )
     apply_default_layout(fig_cat, height=350)
@@ -126,9 +134,13 @@ heatmap_df = pd.DataFrame(heatmap_data)
 if not heatmap_df.empty:
     pivot = heatmap_df.groupby(["skill", "country"]).size().unstack(fill_value=0)
     fig_heat = px.imshow(
-        pivot.values, x=pivot.columns.tolist(), y=pivot.index.tolist(),
+        pivot.values,
+        x=pivot.columns.tolist(),
+        y=pivot.index.tolist(),
         color_continuous_scale=HEATMAP_SCALE,
-        template="plotly_dark", labels=dict(color="Job Count"), aspect="auto",
+        template="plotly_dark",
+        labels=dict(color="Job Count"),
+        aspect="auto",
     )
     apply_default_layout(fig_heat, height=450)
     st.plotly_chart(fig_heat, use_container_width=True)
@@ -148,22 +160,26 @@ def compute_cooccurrence(dataframe: pd.DataFrame, top_n: int = COOCCURRENCE_PAIR
             key = (a, b)
             pair_counts[key] = pair_counts.get(key, 0) + 1
     pairs = sorted(pair_counts.items(), key=lambda x: x[1], reverse=True)[:top_n]
-    return pd.DataFrame(
-        [{"Skill A": a, "Skill B": b, "Co-occurrences": c} for (a, b), c in pairs]
-    )
+    return pd.DataFrame([{"Skill A": a, "Skill B": b, "Co-occurrences": c} for (a, b), c in pairs])
 
 
 cooc = compute_cooccurrence(filtered)
 if not cooc.empty:
     cooc["Pair"] = cooc["Skill A"] + " + " + cooc["Skill B"]
     fig_cooc = px.bar(
-        cooc, x="Co-occurrences", y="Pair", orientation="h",
+        cooc,
+        x="Co-occurrences",
+        y="Pair",
+        orientation="h",
         color="Co-occurrences",
         color_continuous_scale=["#1a1f2e", "#48BB78", "#38B2AC"],
         template="plotly_dark",
     )
     apply_default_layout(
-        fig_cooc, height=400, show_legend=False, coloraxis_showscale=False,
+        fig_cooc,
+        height=400,
+        show_legend=False,
+        coloraxis_showscale=False,
     )
     fig_cooc.update_yaxes(autorange="reversed")
     st.plotly_chart(fig_cooc, use_container_width=True)

@@ -6,7 +6,6 @@ Country-level analytics, city breakdowns, and regional comparisons.
 
 from __future__ import annotations
 
-import pandas as pd
 import plotly.express as px
 import streamlit as st
 
@@ -41,10 +40,14 @@ st.markdown("")
 # ── World Choropleth ─────────────────────────────────────────────────
 st.markdown("#### 🗺️ Global Job Distribution")
 
-geo_df = df.groupby("country_name").agg(
-    jobs=("job_id", "count"),
-    avg_salary=("salary_avg", "mean"),
-).reset_index()
+geo_df = (
+    df.groupby("country_name")
+    .agg(
+        jobs=("job_id", "count"),
+        avg_salary=("salary_avg", "mean"),
+    )
+    .reset_index()
+)
 geo_df["iso_alpha"] = geo_df["country_name"].map(COUNTRY_ISO)
 
 fig_map = px.choropleth(
@@ -79,19 +82,29 @@ st.plotly_chart(fig_map, use_container_width=True)
 # ── Country Comparison Table ─────────────────────────────────────────
 st.markdown("#### 📊 Country Comparison")
 
-country_stats = df.groupby("country_name").agg(
-    total_jobs=("job_id", "count"),
-    avg_salary=("salary_avg", "mean"),
-    median_salary=("salary_avg", "median"),
-    companies=("company", "nunique"),
-    remote_pct=("job_type", lambda x: (x == "Remote").sum() / len(x) * 100),
-).reset_index().sort_values("total_jobs", ascending=False)
+country_stats = (
+    df.groupby("country_name")
+    .agg(
+        total_jobs=("job_id", "count"),
+        avg_salary=("salary_avg", "mean"),
+        median_salary=("salary_avg", "median"),
+        companies=("company", "nunique"),
+        remote_pct=("job_type", lambda x: (x == "Remote").sum() / len(x) * 100),
+    )
+    .reset_index()
+    .sort_values("total_jobs", ascending=False)
+)
 
 country_stats["avg_salary"] = country_stats["avg_salary"].apply(format_currency)
 country_stats["median_salary"] = country_stats["median_salary"].apply(format_currency)
 country_stats["remote_pct"] = country_stats["remote_pct"].apply(lambda x: f"{x:.1f}%")
 country_stats.columns = [
-    "Country", "Total Jobs", "Avg Salary", "Median Salary", "Companies", "Remote %",
+    "Country",
+    "Total Jobs",
+    "Avg Salary",
+    "Median Salary",
+    "Companies",
+    "Remote %",
 ]
 st.dataframe(country_stats, use_container_width=True, hide_index=True)
 
@@ -105,8 +118,12 @@ with col1:
     city_df["Label"] = city_df["city"] + " (" + city_df["country_name"].str[:2].str.upper() + ")"
 
     fig_city = px.bar(
-        city_df, x="Jobs", y="Label", orientation="h",
-        color="country_name", color_discrete_sequence=COLORS,
+        city_df,
+        x="Jobs",
+        y="Label",
+        orientation="h",
+        color="country_name",
+        color_discrete_sequence=COLORS,
         template="plotly_dark",
     )
     apply_default_layout(fig_city, height=500, legend_horizontal=True)
@@ -115,7 +132,9 @@ with col1:
 
 with col2:
     st.markdown(f"#### 💰 Avg Salary by City (Top {TOP_CITIES_COUNT})")
-    city_sal = df.groupby(["city", "country_name"])["salary_avg"].agg(["mean", "count"]).reset_index()
+    city_sal = (
+        df.groupby(["city", "country_name"])["salary_avg"].agg(["mean", "count"]).reset_index()
+    )
     city_sal.columns = ["City", "Country", "Avg Salary", "Jobs"]
     city_sal = (
         city_sal[city_sal["Jobs"] >= 10]
@@ -125,9 +144,14 @@ with col2:
     city_sal["Label"] = city_sal["City"] + " (" + city_sal["Country"].str[:2].str.upper() + ")"
 
     fig_city_sal = px.bar(
-        city_sal, x="Avg Salary", y="Label", orientation="h",
-        color="Country", color_discrete_sequence=COLORS,
-        template="plotly_dark", hover_data=["Jobs"],
+        city_sal,
+        x="Avg Salary",
+        y="Label",
+        orientation="h",
+        color="Country",
+        color_discrete_sequence=COLORS,
+        template="plotly_dark",
+        hover_data=["Jobs"],
     )
     apply_default_layout(fig_city_sal, height=500, legend_horizontal=True)
     fig_city_sal.update_yaxes(autorange="reversed")
@@ -137,8 +161,12 @@ with col2:
 st.markdown("#### 🏷️ Job Type Distribution by Country")
 jt_country = df.groupby(["country_name", "job_type"]).size().reset_index(name="Count")
 fig_jt = px.bar(
-    jt_country, x="country_name", y="Count", color="job_type",
-    barmode="stack", color_discrete_sequence=COLORS,
+    jt_country,
+    x="country_name",
+    y="Count",
+    color="job_type",
+    barmode="stack",
+    color_discrete_sequence=COLORS,
     template="plotly_dark",
     labels={"country_name": "Country", "job_type": "Job Type"},
 )

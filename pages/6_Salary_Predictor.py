@@ -16,7 +16,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 from config.settings import (
-    COLORS,
     MODEL_LEARNING_RATE,
     MODEL_MAX_DEPTH,
     MODEL_N_ESTIMATORS,
@@ -48,14 +47,20 @@ def train_model(df: pd.DataFrame) -> dict:
     df["seniority_enc"] = le_seniority.fit_transform(df["seniority"].astype(str))
 
     feature_cols = [
-        "country_enc", "category_enc", "seniority_enc",
-        "skill_count", "experience_years",
+        "country_enc",
+        "category_enc",
+        "seniority_enc",
+        "skill_count",
+        "experience_years",
     ]
     X = df[feature_cols]
     y = df["salary_avg"]
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=MODEL_TEST_SIZE, random_state=MODEL_RANDOM_STATE,
+        X,
+        y,
+        test_size=MODEL_TEST_SIZE,
+        random_state=MODEL_RANDOM_STATE,
     )
 
     model = GradientBoostingRegressor(
@@ -81,10 +86,13 @@ def train_model(df: pd.DataFrame) -> dict:
             "r2": round(r2_score(y_test, y_pred), 4),
             "mae": round(mean_absolute_error(y_test, y_pred), 2),
         },
-        "importances": dict(zip(
-            ["Country", "Role Category", "Seniority", "Skill Count", "Experience Years"],
-            model.feature_importances_.tolist(),
-        )),
+        "importances": dict(
+            zip(
+                ["Country", "Role Category", "Seniority", "Skill Count", "Experience Years"],
+                model.feature_importances_.tolist(),
+                strict=False,
+            )
+        ),
         "residual_std": residual_std,
     }
 
@@ -115,29 +123,41 @@ st.markdown("#### 🎯 Make a Prediction")
 col_form, col_result = st.columns([2, 3])
 
 with col_form:
-    st.markdown("""
+    st.markdown(
+        """
     <div style="background:linear-gradient(135deg,rgba(102,126,234,0.06) 0%,
                 rgba(118,75,162,0.04) 100%);border:1px solid rgba(102,126,234,0.12);
                 border-radius:16px;padding:24px;margin-bottom:16px;">
         <div style="font-weight:600;color:#E6EDF3;margin-bottom:16px;font-size:1.05rem;">
             📋 Job Parameters</div>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     pred_country = st.selectbox(
-        "Country", sorted(bundle["le_country"].classes_), key="pred_country",
+        "Country",
+        sorted(bundle["le_country"].classes_),
+        key="pred_country",
     )
     pred_category = st.selectbox(
-        "Role Category", sorted(bundle["le_category"].classes_), key="pred_category",
+        "Role Category",
+        sorted(bundle["le_category"].classes_),
+        key="pred_category",
     )
     pred_seniority = st.selectbox(
-        "Seniority Level", SENIORITY_ORDER, index=2, key="pred_seniority",
+        "Seniority Level",
+        SENIORITY_ORDER,
+        index=2,
+        key="pred_seniority",
     )
     pred_skills = st.slider("Number of Skills", 1, 10, 5, key="pred_skills")
     pred_exp = st.slider("Years of Experience", 0, 25, 5, key="pred_exp")
 
     predict_btn = st.button(
-        "🚀 Predict Salary", use_container_width=True, type="primary",
+        "🚀 Predict Salary",
+        use_container_width=True,
+        type="primary",
     )
 
 with col_result:
@@ -147,9 +167,17 @@ with col_result:
             category_enc = bundle["le_category"].transform([pred_category])[0]
             seniority_enc = bundle["le_seniority"].transform([pred_seniority])[0]
 
-            features = np.array([[
-                country_enc, category_enc, seniority_enc, pred_skills, pred_exp,
-            ]])
+            features = np.array(
+                [
+                    [
+                        country_enc,
+                        category_enc,
+                        seniority_enc,
+                        pred_skills,
+                        pred_exp,
+                    ]
+                ]
+            )
             prediction = model.predict(features)[0]
 
             # Data-driven confidence interval (1.96 * std ≈ 95% CI)
@@ -157,7 +185,8 @@ with col_result:
             low = max(0, prediction - margin)
             high = prediction + margin
 
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div style="background:linear-gradient(135deg,rgba(72,187,120,0.08) 0%,
                         rgba(56,178,172,0.08) 100%);border:1px solid rgba(72,187,120,0.2);
                         border-radius:16px;padding:32px;text-align:center;margin-bottom:20px;">
@@ -171,9 +200,12 @@ with col_result:
                 <div style="font-size:0.9rem;color:#8B949E;margin-top:4px;">
                     95% CI: ${low:,.0f} – ${high:,.0f}</div>
             </div>
-            """, unsafe_allow_html=True)
+            """,
+                unsafe_allow_html=True,
+            )
 
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <div style="background:rgba(102,126,234,0.04);border:1px solid rgba(102,126,234,0.1);
                         border-radius:12px;padding:16px;margin-bottom:16px;">
                 <div style="font-weight:600;color:#E6EDF3;margin-bottom:10px;">📝 Prediction Details</div>
@@ -185,7 +217,9 @@ with col_result:
                     <strong style="color:#E6EDF3;">Experience:</strong> {pred_exp} years
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """,
+                unsafe_allow_html=True,
+            )
 
             # Country comparison
             st.markdown("##### 🌍 Same Role Across Countries")
@@ -197,19 +231,27 @@ with col_result:
 
             comp_df = pd.DataFrame(compare).sort_values("Predicted Salary", ascending=False)
             fig_comp = px.bar(
-                comp_df, x="Predicted Salary", y="Country", orientation="h",
-                color="Predicted Salary", color_continuous_scale=GRADIENT_GREEN,
+                comp_df,
+                x="Predicted Salary",
+                y="Country",
+                orientation="h",
+                color="Predicted Salary",
+                color_continuous_scale=GRADIENT_GREEN,
                 template="plotly_dark",
             )
             apply_default_layout(
-                fig_comp, height=300, show_legend=False, coloraxis_showscale=False,
+                fig_comp,
+                height=300,
+                show_legend=False,
+                coloraxis_showscale=False,
             )
             st.plotly_chart(fig_comp, use_container_width=True)
 
         except Exception as e:
             st.error(f"Prediction error: {e}")
     else:
-        st.markdown("""
+        st.markdown(
+            """
         <div style="background:rgba(102,126,234,0.04);border:1px solid rgba(102,126,234,0.1);
                     border-radius:16px;padding:40px;text-align:center;">
             <div style="font-size:3rem;margin-bottom:12px;">🎯</div>
@@ -220,23 +262,31 @@ with col_result:
                 <strong style="color:#667EEA;">Predict Salary</strong> to get ML-powered estimation.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
 # ── Feature Importances ─────────────────────────────────────────────
 st.markdown("")
 st.markdown("#### 📊 Model Feature Importances")
 
-imp_df = pd.DataFrame([
-    {"Feature": k, "Importance": v}
-    for k, v in bundle["importances"].items()
-]).sort_values("Importance", ascending=True)
+imp_df = pd.DataFrame(
+    [{"Feature": k, "Importance": v} for k, v in bundle["importances"].items()]
+).sort_values("Importance", ascending=True)
 
 fig_imp = px.bar(
-    imp_df, x="Importance", y="Feature", orientation="h",
-    color="Importance", color_continuous_scale=GRADIENT_PURPLE,
+    imp_df,
+    x="Importance",
+    y="Feature",
+    orientation="h",
+    color="Importance",
+    color_continuous_scale=GRADIENT_PURPLE,
     template="plotly_dark",
 )
 apply_default_layout(
-    fig_imp, height=250, show_legend=False, coloraxis_showscale=False,
+    fig_imp,
+    height=250,
+    show_legend=False,
+    coloraxis_showscale=False,
 )
 st.plotly_chart(fig_imp, use_container_width=True)

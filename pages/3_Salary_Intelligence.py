@@ -13,7 +13,6 @@ import streamlit as st
 
 from config.settings import COLORS, SENIORITY_ORDER
 from utils.chart_helpers import (
-    GRADIENT_PURPLE,
     GRADIENT_WARM,
     apply_default_layout,
     format_currency,
@@ -46,9 +45,7 @@ with st.expander("🎛️ Filters", expanded=False):
             key="sal_seniority",
         )
 
-filtered = df[
-    df["country_name"].isin(sel_countries) & df["seniority"].isin(sel_seniorities)
-]
+filtered = df[df["country_name"].isin(sel_countries) & df["seniority"].isin(sel_seniorities)]
 
 if filtered.empty:
     st.info("No data matches filters.")
@@ -77,8 +74,11 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown("#### 🌍 Salary by Country")
     fig_box = px.box(
-        filtered, x="country_name", y="salary_avg",
-        color="country_name", color_discrete_sequence=COLORS,
+        filtered,
+        x="country_name",
+        y="salary_avg",
+        color="country_name",
+        color_discrete_sequence=COLORS,
         template="plotly_dark",
         labels={"salary_avg": "Average Salary (USD)", "country_name": "Country"},
     )
@@ -88,8 +88,11 @@ with col1:
 with col2:
     st.markdown("#### 🎯 Salary by Role")
     fig_role = px.box(
-        filtered, x="category", y="salary_avg",
-        color="category", color_discrete_sequence=COLORS,
+        filtered,
+        x="category",
+        y="salary_avg",
+        color="category",
+        color_discrete_sequence=COLORS,
         template="plotly_dark",
         labels={"salary_avg": "Average Salary (USD)", "category": "Role"},
     )
@@ -109,16 +112,24 @@ sen_sal = (
 sen_sal.columns = ["Seniority", "Mean", "Median", "Min", "Max"]
 
 fig_sen = go.Figure()
-fig_sen.add_trace(go.Bar(
-    x=sen_sal["Seniority"], y=sen_sal["Mean"],
-    name="Mean", marker_color="#667EEA",
-    hovertemplate="<b>%{x}</b><br>Mean: $%{y:,.0f}<extra></extra>",
-))
-fig_sen.add_trace(go.Bar(
-    x=sen_sal["Seniority"], y=sen_sal["Median"],
-    name="Median", marker_color="#764BA2",
-    hovertemplate="<b>%{x}</b><br>Median: $%{y:,.0f}<extra></extra>",
-))
+fig_sen.add_trace(
+    go.Bar(
+        x=sen_sal["Seniority"],
+        y=sen_sal["Mean"],
+        name="Mean",
+        marker_color="#667EEA",
+        hovertemplate="<b>%{x}</b><br>Mean: $%{y:,.0f}<extra></extra>",
+    )
+)
+fig_sen.add_trace(
+    go.Bar(
+        x=sen_sal["Seniority"],
+        y=sen_sal["Median"],
+        name="Median",
+        marker_color="#764BA2",
+        hovertemplate="<b>%{x}</b><br>Median: $%{y:,.0f}<extra></extra>",
+    )
+)
 apply_default_layout(fig_sen, height=350, legend_horizontal=True)
 fig_sen.update_layout(barmode="group")
 fig_sen.update_yaxes(title="USD")
@@ -143,13 +154,14 @@ with col3:
         avg_salary = filtered["salary_avg"].mean()
         skill_avg = ss_df.groupby("skill")["salary"].mean().reset_index()
         skill_avg.columns = ["Skill", "Avg Salary"]
-        skill_avg["Premium"] = (
-            (skill_avg["Avg Salary"] - avg_salary) / avg_salary * 100
-        ).round(1)
+        skill_avg["Premium"] = ((skill_avg["Avg Salary"] - avg_salary) / avg_salary * 100).round(1)
         skill_avg = skill_avg.sort_values("Avg Salary", ascending=False).head(15)
 
         fig_premium = px.bar(
-            skill_avg, x="Avg Salary", y="Skill", orientation="h",
+            skill_avg,
+            x="Avg Salary",
+            y="Skill",
+            orientation="h",
             color="Premium",
             color_continuous_scale=["#E53E3E", "#D69E2E", "#48BB78"],
             template="plotly_dark",
@@ -161,25 +173,25 @@ with col3:
 
 with col4:
     st.markdown("#### 🏢 Top Paying Companies")
-    comp_sal = (
-        filtered.groupby("company")["salary_avg"]
-        .agg(["mean", "count"])
-        .reset_index()
-    )
+    comp_sal = filtered.groupby("company")["salary_avg"].agg(["mean", "count"]).reset_index()
     comp_sal.columns = ["Company", "Avg Salary", "Jobs"]
-    comp_sal = (
-        comp_sal[comp_sal["Jobs"] >= 5]
-        .sort_values("Avg Salary", ascending=False)
-        .head(15)
-    )
+    comp_sal = comp_sal[comp_sal["Jobs"] >= 5].sort_values("Avg Salary", ascending=False).head(15)
 
     fig_comp = px.bar(
-        comp_sal, x="Avg Salary", y="Company", orientation="h",
-        color="Avg Salary", color_continuous_scale=GRADIENT_WARM,
-        template="plotly_dark", hover_data=["Jobs"],
+        comp_sal,
+        x="Avg Salary",
+        y="Company",
+        orientation="h",
+        color="Avg Salary",
+        color_continuous_scale=GRADIENT_WARM,
+        template="plotly_dark",
+        hover_data=["Jobs"],
     )
     apply_default_layout(
-        fig_comp, height=450, show_legend=False, coloraxis_showscale=False,
+        fig_comp,
+        height=450,
+        show_legend=False,
+        coloraxis_showscale=False,
     )
     fig_comp.update_yaxes(autorange="reversed")
     st.plotly_chart(fig_comp, use_container_width=True)
@@ -187,7 +199,9 @@ with col4:
 # ── Salary Distribution ─────────────────────────────────────────────
 st.markdown("#### 📈 Salary Distribution with Percentiles")
 fig_dist = px.histogram(
-    filtered, x="salary_avg", nbins=60,
+    filtered,
+    x="salary_avg",
+    nbins=60,
     color_discrete_sequence=["#667EEA"],
     template="plotly_dark",
     labels={"salary_avg": "Average Salary (USD)"},
@@ -196,7 +210,9 @@ fig_dist = px.histogram(
 for pct, color, name in [(25, "#48BB78", "P25"), (50, "#ED8936", "P50"), (75, "#E53E3E", "P75")]:
     val = filtered["salary_avg"].quantile(pct / 100)
     fig_dist.add_vline(
-        x=val, line_dash="dash", line_color=color,
+        x=val,
+        line_dash="dash",
+        line_color=color,
         annotation_text=f"{name}: ${val:,.0f}",
         annotation_font_color=color,
     )

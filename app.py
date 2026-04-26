@@ -6,8 +6,9 @@ Main landing page with premium UI and global CSS injection.
 
 from __future__ import annotations
 
-import streamlit as st
 from pathlib import Path
+
+import streamlit as st
 
 # ── Page Config ──────────────────────────────────────────────────────
 st.set_page_config(
@@ -26,7 +27,8 @@ st.markdown(
 )
 
 # Inline fallback CSS (always applied)
-st.markdown("""
+st.markdown(
+    """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 html, body, [class*="css"] {
@@ -35,7 +37,9 @@ html, body, [class*="css"] {
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 from utils.data_loader import load_processed_data
 
@@ -44,7 +48,8 @@ df = load_processed_data()
 
 # ── Sidebar ──────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("""
+    st.markdown(
+        """
     <div style="text-align: center; padding: 20px 0 10px 0;">
         <div style="font-size: 2.5rem; margin-bottom: 4px;">🌍</div>
         <div style="font-size: 1rem; font-weight: 700; color: #E6EDF3;
@@ -56,7 +61,9 @@ with st.sidebar:
             Analytics Platform v2.0
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     st.markdown(
         '<div style="height:2px;background:linear-gradient(90deg,transparent,'
@@ -65,7 +72,8 @@ with st.sidebar:
     )
 
     if not df.empty:
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div style="padding: 8px 0; text-align: center;">
             <span style="display:inline-block;padding:4px 12px;border-radius:20px;
                          font-size:0.75rem;font-weight:600;letter-spacing:0.05em;
@@ -77,7 +85,9 @@ with st.sidebar:
                 {len(df):,} jobs tracked
             </span>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
 # ── Hero Section ─────────────────────────────────────────────────────
 st.markdown("")
@@ -126,20 +136,33 @@ if not df.empty:
     st.markdown("")
 
     features = [
-        ("📊", "Market Overview",
-         "Interactive dashboards with KPIs, trend analysis, and hiring patterns."),
-        ("🧠", "Skill Analytics",
-         "NLP-powered extraction of 80+ in-demand skills with category breakdowns."),
-        ("💰", "Salary Intelligence",
-         "Deep salary analysis by country, role, seniority, and skill premium."),
-        ("🌍", "Geographic Insights",
-         "Country-level comparisons, city analytics, and regional hotspots."),
-        ("🔎", "Job Explorer",
-         "Advanced multi-filter search with styled job cards and CSV export."),
-        ("🤖", "Salary Predictor",
-         "ML-powered salary estimation with confidence intervals."),
-        ("📤", "Upload & Analyze",
-         "Upload any CSV/Excel dataset for automatic analysis."),
+        (
+            "📊",
+            "Market Overview",
+            "Interactive dashboards with KPIs, trend analysis, and hiring patterns.",
+        ),
+        (
+            "🧠",
+            "Skill Analytics",
+            "NLP-powered extraction of 80+ in-demand skills with category breakdowns.",
+        ),
+        (
+            "💰",
+            "Salary Intelligence",
+            "Deep salary analysis by country, role, seniority, and skill premium.",
+        ),
+        (
+            "🌍",
+            "Geographic Insights",
+            "Country-level comparisons, city analytics, and regional hotspots.",
+        ),
+        (
+            "🔎",
+            "Job Explorer",
+            "Advanced multi-filter search with styled job cards and CSV export.",
+        ),
+        ("🤖", "Salary Predictor", "ML-powered salary estimation with confidence intervals."),
+        ("📤", "Upload & Analyze", "Upload any CSV/Excel dataset for automatic analysis."),
     ]
 
     _card_css = (
@@ -186,20 +209,28 @@ if not df.empty:
     st.markdown("### 📈 Quick Snapshot")
 
     import plotly.express as px
+
     from config.settings import COLORS
-    from utils.chart_helpers import apply_default_layout, GRADIENT_PURPLE
+    from utils.chart_helpers import GRADIENT_PURPLE, apply_default_layout
 
     c1, c2 = st.columns(2)
     with c1:
         country_counts = df["country_name"].value_counts().reset_index()
         country_counts.columns = ["Country", "Jobs"]
         fig = px.bar(
-            country_counts, x="Jobs", y="Country", orientation="h",
-            color="Jobs", color_continuous_scale=GRADIENT_PURPLE,
+            country_counts,
+            x="Jobs",
+            y="Country",
+            orientation="h",
+            color="Jobs",
+            color_continuous_scale=GRADIENT_PURPLE,
             template="plotly_dark",
         )
         apply_default_layout(
-            fig, height=350, show_legend=False, coloraxis_showscale=False,
+            fig,
+            height=350,
+            show_legend=False,
+            coloraxis_showscale=False,
             title="Jobs by Country",
         )
         fig.update_layout(margin=dict(l=0, r=20, t=40, b=0))
@@ -209,8 +240,11 @@ if not df.empty:
         cat_counts = df["category"].value_counts().reset_index()
         cat_counts.columns = ["Role", "Count"]
         fig2 = px.pie(
-            cat_counts, values="Count", names="Role",
-            hole=0.55, color_discrete_sequence=COLORS,
+            cat_counts,
+            values="Count",
+            names="Role",
+            hole=0.55,
+            color_discrete_sequence=COLORS,
             template="plotly_dark",
         )
         apply_default_layout(fig2, height=350, title="Role Distribution")
@@ -231,6 +265,5 @@ if not df.empty:
 
 else:
     st.warning(
-        "No data found. Run `python data/generate_synthetic_data.py` "
-        "to generate sample data."
+        "No data found. Run `python data/generate_synthetic_data.py` " "to generate sample data."
     )

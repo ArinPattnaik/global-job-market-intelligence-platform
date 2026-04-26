@@ -99,7 +99,10 @@ def train_model(
 
         # ── Train / Test Split ───────────────────────────────────
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=MODEL_TEST_SIZE, random_state=MODEL_RANDOM_STATE,
+            X,
+            y,
+            test_size=MODEL_TEST_SIZE,
+            random_state=MODEL_RANDOM_STATE,
         )
 
         # ── Model Training ───────────────────────────────────────
@@ -120,14 +123,16 @@ def train_model(
         }
 
         cv_scores = cross_val_score(
-            model, X, y, cv=MODEL_CV_FOLDS, scoring="r2",
+            model,
+            X,
+            y,
+            cv=MODEL_CV_FOLDS,
+            scoring="r2",
         )
         metrics["cv_r2_mean"] = round(float(cv_scores.mean()), 4)
         metrics["cv_r2_std"] = round(float(cv_scores.std()), 4)
 
-        importances = dict(
-            zip(FEATURE_COLS, model.feature_importances_.tolist())
-        )
+        importances = dict(zip(FEATURE_COLS, model.feature_importances_.tolist(), strict=False))
 
         bundle: dict[str, Any] = {
             "model": model,

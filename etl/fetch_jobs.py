@@ -46,9 +46,7 @@ def _build_session() -> requests.Session:
 def _validate_credentials() -> None:
     """Ensure API credentials are configured."""
     if not ADZUNA_APP_ID or not ADZUNA_APP_KEY:
-        raise EnvironmentError(
-            "ADZUNA_APP_ID and ADZUNA_APP_KEY must be set in .env"
-        )
+        raise OSError("ADZUNA_APP_ID and ADZUNA_APP_KEY must be set in .env")
 
 
 def _parse_job(job: dict[str, Any], country: str) -> dict[str, Any]:
@@ -89,18 +87,11 @@ def fetch_jobs() -> pd.DataFrame:
                 resp = session.get(url, params=params, timeout=_REQUEST_TIMEOUT)
                 resp.raise_for_status()
                 data = resp.json()
-                page_jobs = [
-                    _parse_job(j, country)
-                    for j in data.get("results", [])
-                ]
+                page_jobs = [_parse_job(j, country) for j in data.get("results", [])]
                 jobs.extend(page_jobs)
-                logger.debug(
-                    "  page %d: %d results", page, len(page_jobs)
-                )
+                logger.debug("  page %d: %d results", page, len(page_jobs))
             except requests.RequestException:
-                logger.exception(
-                    "Failed to fetch page %d for %s", page, country
-                )
+                logger.exception("Failed to fetch page %d for %s", page, country)
                 continue
 
     df = pd.DataFrame(jobs)

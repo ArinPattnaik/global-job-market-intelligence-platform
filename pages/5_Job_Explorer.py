@@ -38,19 +38,27 @@ with st.expander("🎛️ Advanced Filters", expanded=True):
     fc1, fc2, fc3, fc4 = st.columns(4)
     with fc1:
         sel_countries = st.multiselect(
-            "Country", sorted(df["country_name"].unique()), key="je_countries",
+            "Country",
+            sorted(df["country_name"].unique()),
+            key="je_countries",
         )
     with fc2:
         sel_categories = st.multiselect(
-            "Role Category", sorted(df["category"].unique()), key="je_categories",
+            "Role Category",
+            sorted(df["category"].unique()),
+            key="je_categories",
         )
     with fc3:
         sel_seniorities = st.multiselect(
-            "Seniority", sorted(df["seniority"].unique()), key="je_seniority",
+            "Seniority",
+            sorted(df["seniority"].unique()),
+            key="je_seniority",
         )
     with fc4:
         sel_job_types = st.multiselect(
-            "Job Type", sorted(df["job_type"].unique()), key="je_jobtypes",
+            "Job Type",
+            sorted(df["job_type"].unique()),
+            key="je_jobtypes",
         )
 
     fc5, fc6 = st.columns(2)
@@ -65,7 +73,8 @@ with st.expander("🎛️ Advanced Filters", expanded=True):
         )
     with fc6:
         skill_search = st.text_input(
-            "Skills (comma-separated)", placeholder="python, sql, aws",
+            "Skills (comma-separated)",
+            placeholder="python, sql, aws",
         )
 
 # ── Apply Filters ────────────────────────────────────────────────────
@@ -89,8 +98,7 @@ if sel_job_types:
     results = results[results["job_type"].isin(sel_job_types)]
 
 results = results[
-    (results["salary_avg"] >= salary_range[0])
-    & (results["salary_avg"] <= salary_range[1])
+    (results["salary_avg"] >= salary_range[0]) & (results["salary_avg"] <= salary_range[1])
 ]
 
 if skill_search:
@@ -125,6 +133,7 @@ if results.empty:
     st.info("No jobs match your search criteria. Try adjusting your filters.")
     st.stop()
 
+
 # ── Job Cards ────────────────────────────────────────────────────────
 def _hex_to_rgb(hex_color: str) -> str:
     h = hex_color.lstrip("#")
@@ -155,7 +164,8 @@ for _, row in results.head(JOB_EXPLORER_PAGE_SIZE).iterrows():
     jt_rgb = _hex_to_rgb(jt_color)
     sen_rgb = _hex_to_rgb(sen_color)
 
-    st.markdown(f"""
+    st.markdown(
+        f"""
     <div style="background:linear-gradient(135deg,rgba(102,126,234,0.04) 0%,
                 rgba(118,75,162,0.03) 100%);border:1px solid rgba(102,126,234,0.10);
                 border-radius:14px;padding:20px 24px;margin-bottom:12px;">
@@ -189,7 +199,9 @@ for _, row in results.head(JOB_EXPLORER_PAGE_SIZE).iterrows():
             </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
 # ── Export ────────────────────────────────────────────────────────────
 st.markdown("")

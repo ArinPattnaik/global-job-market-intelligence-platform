@@ -39,8 +39,6 @@ def sample_jobs_df() -> pd.DataFrame:
             ],
             "job_type": ["Full-time", "Remote", "Full-time"],
             "experience_years": [7, 3, 8],
-            "posted_date": pd.to_datetime(
-                ["2025-01-15", "2025-02-01", "2025-01-20"]
-            ),
+            "posted_date": pd.to_datetime(["2025-01-15", "2025-02-01", "2025-01-20"]),
         }
     )

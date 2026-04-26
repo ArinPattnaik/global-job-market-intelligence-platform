@@ -3,7 +3,6 @@ Tests for Chart Helper Utilities
 """
 
 import plotly.graph_objects as go
-import pytest
 
 from utils.chart_helpers import (
     apply_default_layout,
