@@ -82,7 +82,9 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("#### 📈 Monthly Hiring Trend")
-    monthly = filtered.set_index("posted_date").resample("M")["job_id"].count().reset_index()
+    monthly = (
+        filtered.set_index("posted_date").resample("ME")["job_id"].count().reset_index()
+    )
     monthly.columns = ["Month", "Jobs"]
     fig_trend = px.area(
         monthly,

@@ -334,7 +334,7 @@ if "Time Series" in tabs_list:
 
             if len(ts_df) > 30:
                 st.markdown("##### Aggregated (Monthly Mean)")
-                monthly = ts_df.set_index(date_col).resample("M")[value_col].mean().reset_index()
+                monthly = ts_df.set_index(date_col).resample("ME")[value_col].mean().reset_index()
                 fig2 = px.bar(
                     monthly,
                     x=date_col,
